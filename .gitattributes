@@ -1,0 +1,13 @@
+# 插件运行在 Linux 上，统一使用 LF
+* text=auto eol=lf
+
+*.py   text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.md   text eol=lf
+*.txt  text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.zip  binary
+*.gz   binary

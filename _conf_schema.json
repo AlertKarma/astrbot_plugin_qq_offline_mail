@@ -1,0 +1,98 @@
+{
+  "enabled": {
+    "description": "启用掉线监控",
+    "type": "bool",
+    "default": true
+  },
+  "check_interval": {
+    "description": "检查间隔（秒）",
+    "type": "int",
+    "default": 60,
+    "slider": { "min": 10, "max": 600, "step": 5 },
+    "hint": "每隔多少秒探活一次协议端。太短会给 NapCat 增加压力，建议 30~120 秒。"
+  },
+  "fail_threshold": {
+    "description": "连续失败几次才告警",
+    "type": "int",
+    "default": 3,
+    "slider": { "min": 1, "max": 20, "step": 1 },
+    "hint": "避免网络抖动造成误报。按 60 秒间隔算，3 次约等于掉线 3 分钟才发信。"
+  },
+  "cooldown_minutes": {
+    "description": "告警冷却（分钟）",
+    "type": "int",
+    "default": 30,
+    "slider": { "min": 0, "max": 720, "step": 5 },
+    "hint": "一直掉线时，两封告警邮件之间的最小间隔。设为 0 表示每次都发。"
+  },
+  "notify_recovery": {
+    "description": "恢复时也发一封邮件",
+    "type": "bool",
+    "default": false
+  },
+  "probe_timeout": {
+    "description": "单次探活超时（秒）",
+    "type": "int",
+    "default": 10,
+    "slider": { "min": 3, "max": 60, "step": 1 }
+  },
+  "check_qq_online": {
+    "description": "额外检查 QQ 账号是否在线",
+    "type": "bool",
+    "default": true,
+    "hint": "调用 OneBot 的 get_status，能发现 NapCat 还活着但 QQ 号被踢下线的情况。部分协议端不支持，会自动忽略。"
+  },
+  "platform_types": {
+    "description": "要监控的平台类型",
+    "type": "list",
+    "default": ["aiocqhttp"],
+    "hint": "默认只监控 OneBot v11（NapCat / Lagrange / LLOneBot）。"
+  },
+  "platform_ids": {
+    "description": "只监控指定平台实例 ID",
+    "type": "list",
+    "default": [],
+    "hint": "留空表示监控上面所有类型的实例。多个实例时可在 WebUI 机器人页看到各自的 ID。"
+  },
+  "smtp_host": {
+    "description": "SMTP 服务器地址",
+    "type": "string",
+    "default": "smtp.qq.com"
+  },
+  "smtp_port": {
+    "description": "SMTP 端口",
+    "type": "int",
+    "default": 465
+  },
+  "security": {
+    "description": "加密方式",
+    "type": "string",
+    "default": "ssl",
+    "options": ["ssl", "starttls", "none"],
+    "labels": ["SSL（465，QQ/163 用这个）", "STARTTLS（587，Gmail 用这个）", "不加密"]
+  },
+  "smtp_user": {
+    "description": "SMTP 登录账号（发件邮箱）",
+    "type": "string",
+    "default": ""
+  },
+  "smtp_password": {
+    "description": "SMTP 授权码 / 密码",
+    "type": "string",
+    "default": "",
+    "secret": true,
+    "hint": "QQ 邮箱、163 邮箱都要用「授权码」而不是登录密码。"
+  },
+  "mail_from": {
+    "description": "发件人地址",
+    "type": "string",
+    "default": "",
+    "hint": "留空则使用 smtp_user。"
+  },
+  "mail_to": {
+    "description": "收件人地址列表",
+    "type": "list",
+    "default": [],
+    "hint": "可以填多个邮箱。"
+  }
+}

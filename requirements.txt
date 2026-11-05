@@ -1,0 +1,2 @@
+# 本插件只用 AstrBot 自带的 API 和 Python 标准库（smtplib / email / ssl）。
+# 不依赖第三方包。如果以后需要额外依赖，在这里按 requirements.txt 格式补充。
