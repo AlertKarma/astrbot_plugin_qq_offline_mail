@@ -36,7 +36,7 @@ NapCat 半夜掉线，你要到第二天才发现？这个插件每隔一分钟�
 - ✅ 协议端卡死无响应
 
 > [!WARNING]
-> **发现不了 AstrBot 进程自己挂掉。** 插件跑在 AstrBot 内部，进程没了它也没了。要覆盖这种情况，需要额外的外部看门狗（systemd timer 或 cron 定时 `curl` WebUI 端口）。
+> **发现不了 AstrBot 进程自己挂掉。** 插件跑在 AstrBot 内部，进程没了它也没了。
 
 ## 安装
 
