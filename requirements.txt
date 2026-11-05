@@ -1,2 +1,5 @@
-# 本插件只用 AstrBot 自带的 API 和 Python 标准库（smtplib / email / ssl）。
-# 不依赖第三方包。如果以后需要额外依赖，在这里按 requirements.txt 格式补充。
+# 本插件仅使用 AstrBot 内置 API 与 Python 标准库（smtplib / email / ssl），
+# 无第三方依赖。
+#
+# 若后续引入依赖，请按 requirements.txt 格式在此逐行补充，例如：
+# aiohttp>=3.9.0

@@ -9,8 +9,8 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import smtplib
-import ssl
 import socket
+import ssl
 import traceback
 from datetime import datetime
 from email.message import EmailMessage
@@ -180,7 +180,7 @@ class QqOfflineMailPlugin(Star):
             info = await asyncio.wait_for(
                 client.api.call_action("get_login_info"), timeout=timeout
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return False, (
                 f"调用 get_login_info 超时（>{timeout:g}s），"
                 "协议端可能卡死或已经退出"
@@ -188,7 +188,10 @@ class QqOfflineMailPlugin(Star):
         except Exception as e:
             return False, f"调用 get_login_info 失败：{type(e).__name__}: {e}"
 
-        if not isinstance(info, dict) or not (info.get("user_id") or info.get("nickname")):
+        has_identity = isinstance(info, dict) and (
+            info.get("user_id") or info.get("nickname")
+        )
+        if not has_identity:
             return False, f"get_login_info 返回异常：{info!r}"
 
         # 3) 可选：确认 QQ 账号本身在线（NapCat 活着但账号被踢下线的情况）
@@ -272,7 +275,9 @@ class QqOfflineMailPlugin(Star):
 
     # ------------------------------------------------------------------ 邮件
 
-    async def _notify_offline(self, pid: str, ptype: str, reason: str, state: dict) -> None:
+    async def _notify_offline(
+        self, pid: str, ptype: str, reason: str, state: dict
+    ) -> None:
         first_fail = state.get("first_fail_at") or datetime.now()
         elapsed = _fmt_duration((datetime.now() - first_fail).total_seconds())
         subject = f"【AstrBot 告警】QQ 机器人掉线了（{pid}）"
@@ -418,7 +423,10 @@ class QqOfflineMailPlugin(Star):
         ]
         targets = self._target_platforms()
         if not targets:
-            lines.append("当前没有找到被监控的平台实例（platform_types 里是否包含 aiocqhttp？）")
+            lines.append(
+                "当前没有找到被监控的平台实例"
+                "（platform_types 里是否包含 aiocqhttp？）"
+            )
         for pid, ptype, inst in targets:
             state = self._states.get(pid, {})
             try:
