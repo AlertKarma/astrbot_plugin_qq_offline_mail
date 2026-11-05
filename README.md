@@ -101,7 +101,7 @@ WebUI → 插件 → **QQ 掉线邮件通知**。
 
 ## 资源开销
 
-实测数据（`tests/bench_overhead.py`），2C2G 机器完全无压力：
+实测数据，2C2G 机器完全无压力：
 
 | 项目 | 实测值 |
 | --- | --- |
@@ -114,17 +114,6 @@ WebUI → 插件 → **QQ 掉线邮件通知**。
 内存不随时间增长：没有消息历史、没有缓存列表，每个平台实例只维护一个固定大小的状态字典。发信走 `asyncio.to_thread`，SMTP 握手不阻塞事件循环。
 
 作为对比：AstrBot 本体常驻 300 MB 到 1 GB，NapCat 100 到 300 MB。
-
-## 测试
-
-四个离线脚本，用桩模块替代 `astrbot`，**不装 AstrBot 也能跑**：
-
-```bash
-python tests/test_plugin_logic.py   # 掉线判定 / 阈值 / 冷却 / 恢复 / 过滤
-python tests/test_smtp_send.py      # 真实走一遍 smtplib（本地假 SMTP 服务器）
-python tests/bench_overhead.py      # 内存 / CPU 开销
-python tests/bench_realistic.py     # 真实节奏下的长期内存稳定性
-```
 
 ## 已知限制
 
