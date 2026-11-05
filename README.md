@@ -1,55 +1,27 @@
 # QQ 掉线邮件通知
 
-> 给 AstrBot 用的插件：QQ 机器人掉线时，发邮件提醒你。
+AstrBot 插件：QQ 机器人（NapCat / OneBot v11）掉线时，给你发一封邮件。
 
-<div align="center">
+## 功能
 
-![AstrBot](https://img.shields.io/badge/AstrBot-%E2%89%A54.5-1f6feb?style=flat-square)
-![Platform](https://img.shields.io/badge/OneBot-v11-7c3aed?style=flat-square)
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)
-![Deps](https://img.shields.io/badge/dependencies-0-2ea043?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-2ea043?style=flat-square)
-
-</div>
-
----
-
-NapCat 半夜掉线，你要到第二天才发现？这个插件每隔一分钟探活一次，
-连续失败就给你发邮件。
-
-## 特性
-
-|  |  |
-| --- | --- |
-| 🔍 **三重探活** | 反向 WebSocket 连接状态 + `get_login_info` + `get_status` |
-| 🎯 **不误报** | 连续失败 N 次才告警，扛得住网络抖动 |
-| 🔕 **不刷屏** | 告警冷却期内不重复发信 |
-| 📮 **通用 SMTP** | QQ 邮箱 / 163 / Gmail / 自建服务端都行 |
-| 🪶 **几乎零开销** | 无第三方依赖，常驻内存 < 1 MB |
-| 🛠️ **可自检** | `/mailtest` 验证配置，`/mailstatus` 看实时状态 |
-
-## 能发现什么
-
-- ✅ NapCat 崩溃 / 容器退出
-- ✅ QQ 号被踢下线（NapCat 还活着但账号掉了）
-- ✅ 反向 WebSocket 断开
-- ✅ 协议端卡死无响应
-
-> [!WARNING]
-> **发现不了 AstrBot 进程自己挂掉。** 插件跑在 AstrBot 内部，进程没了它也没了。
+- 定时通过 OneBot API 探活协议端，同时检查反向 WebSocket 连接
+- 连续失败若干次才告警，避免网络抖动误报
+- 告警后进入冷却期，持续掉线不会反复发信
+- 支持 QQ 邮箱、163、Gmail 及自建 SMTP 服务
+- 提供 `/mailtest` 和 `/mailstatus` 用于自检
 
 ## 安装
 
-把整个目录放进 AstrBot 的插件目录，然后重启：
+把插件目录放到 AstrBot 的 `data/plugins` 下，然后重启：
 
 ```bash
 cd /path/to/AstrBot/data/plugins
 git clone https://github.com/AlertKarma/astrbot_plugin_qq_offline_mail.git
 ```
 
-Docker 部署的话，插件目录一般映射在宿主机的 `./data/plugins`。
+Docker 部署时，插件目录一般映射在宿主机的 `./data/plugins`。
 
-重启后日志里应该出现：
+重启后日志会输出：
 
 ```
 QQ 掉线邮件通知已启动：每 60 秒探活一次，连续失败 3 次告警。
@@ -57,68 +29,45 @@ QQ 掉线邮件通知已启动：每 60 秒探活一次，连续失败 3 次告�
 
 ## 配置
 
-WebUI → 插件 → **QQ 掉线邮件通知**。
-
-### 必填
+在 WebUI 的插件页找到「QQ 掉线邮件通知」，填这三项就能用：
 
 | 配置项 | 说明 |
 | --- | --- |
 | `smtp_user` | 发件邮箱 |
-| `smtp_password` | **授权码**，不是登录密码 |
-| `mail_to` | 收件人列表，可多个 |
+| `smtp_password` | 邮箱授权码，不是登录密码 |
+| `mail_to` | 收件人，可填多个 |
 
-### 常用（有默认值，一般不用改）
+其余配置都有默认值：
 
 | 配置项 | 默认 | 说明 |
 | --- | --- | --- |
-| `check_interval` | `60` | 检查间隔（秒） |
-| `fail_threshold` | `3` | 连续失败几次才告警 |
-| `cooldown_minutes` | `30` | 告警冷却（分钟） |
-| `notify_recovery` | `false` | 恢复时也发一封 |
-| `smtp_host` | `smtp.qq.com` | SMTP 服务器 |
-| `smtp_port` | `465` | 端口 |
-| `security` | `ssl` | 加密方式 |
+| `check_interval` | 60 | 检查间隔（秒） |
+| `fail_threshold` | 3 | 连续失败几次才告警 |
+| `cooldown_minutes` | 30 | 告警冷却（分钟） |
+| `notify_recovery` | false | 恢复时是否也发一封 |
+| `smtp_host` | smtp.qq.com | SMTP 服务器 |
+| `smtp_port` | 465 | 端口 |
+| `security` | ssl | 加密方式 |
 
-<details>
-<summary><b>QQ 邮箱授权码怎么拿</b></summary>
-
-1. 登录 [mail.qq.com](https://mail.qq.com) → 设置 → 账号
-2. 开启「POP3/SMTP 服务」（要手机短信验证）
-3. 生成 16 位授权码，填进 `smtp_password`
-
-> 163 邮箱同理，Gmail 用 `smtp.gmail.com` + `587` + `starttls` + 应用专用密码。
-
-</details>
+QQ 邮箱的授权码在邮箱设置的账号页面生成，其他邮箱大同小异。
 
 ## 使用
 
 | 指令 | 作用 |
 | --- | --- |
 | `/mailtest` | 立即发一封测试邮件 |
-| `/mailstatus` | 查看探活状态和失败原因 |
+| `/mailstatus` | 查看当前探活状态 |
 
-两个都是管理员权限。配好后先发 `/mailtest`，确认能收到再等掉线告警。
+两个指令都需要管理员权限。配好后建议先发一次 `/mailtest`，确认能正常收到。
 
-## 资源开销
+## 说明
 
-实测数据，2C2G 机器完全无压力：
+插件运行在 AstrBot 进程内，能发现的是协议端的问题：NapCat 崩溃、QQ 号被踢下线、反向 WebSocket 断开、协议端卡死。
 
-| 项目 | 实测值 |
-| --- | --- |
-| 常驻内存 | < 1 MB |
-| 单次探活 CPU | 3～6 微秒 |
-| 平均 CPU 占用 | 约 0.00001% 单核 |
-| 一天累计 CPU | 约 0.3 秒 |
-| 第三方依赖 | 0 |
+如果 AstrBot 进程本身挂了，这个插件也一起没了，自然发不出邮件。要覆盖这种情况，得另外配一个外部看门狗，比如 cron 定时请求 WebUI 端口。
 
-内存不随时间增长：没有消息历史、没有缓存列表，每个平台实例只维护一个固定大小的状态字典。发信走 `asyncio.to_thread`，SMTP 握手不阻塞事件循环。
-
-作为对比：AstrBot 本体常驻 300 MB 到 1 GB，NapCat 100 到 300 MB。
-
-## 已知限制
-
-`get_status` 在部分协议端没实现，探活时会自动跳过，不影响主判断。
+另外，`get_status` 在部分协议端没有实现，探活时会跳过这项检查。
 
 ## License
 
-[MIT](LICENSE)
+MIT
