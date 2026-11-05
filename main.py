@@ -401,7 +401,7 @@ class QqOfflineMailPlugin(Star):
         )
         if ok:
             yield event.plain_result(
-                f"测试邮件已发送到：{', '.join(self._recipients())}，请查收（含垃圾箱）。",
+                f"测试邮件已发送到：{', '.join(self._recipients())}，请查收。",
             )
         else:
             yield event.plain_result(f"测试邮件发送失败：{err}")
