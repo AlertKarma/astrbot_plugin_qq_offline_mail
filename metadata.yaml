@@ -1,10 +1,24 @@
 name: astrbot_plugin_qq_offline_mail
 display_name: QQ 掉线邮件通知
-desc: 定时探活 NapCat / OneBot 协议端，QQ 机器人掉线时发邮件告警（支持 QQ 邮箱、163、Gmail 等任意 SMTP）。
 short_desc: QQ 机器人掉线时给你发邮件
-version: v1.0.0
-author: local
-repo: https://github.com/example/astrbot_plugin_qq_offline_mail
+desc: |
+  定时探活 NapCat / OneBot v11 协议端，QQ 机器人掉线时发邮件告警。
+
+  - 三重探活：反向 WebSocket 状态 + get_login_info + get_status
+  - 连续失败达阈值才告警，避免网络抖动误报
+  - 告警冷却，持续掉线不刷屏
+  - 支持任意 SMTP（QQ 邮箱 / 163 / Gmail / 自建）
+  - /mailtest 和 /mailstatus 管理指令
+version: 1.0.0
+author: AlertKarma
+repo: https://github.com/AlertKarma/astrbot_plugin_qq_offline_mail
+social_link: https://github.com/AlertKarma
+astrbot_version: ">=4.5"
 support_platforms:
   - aiocqhttp
-astrbot_version: ">=4.5"
+tags:
+  - 监控
+  - 通知
+  - 邮件
+  - napcat
+  - onebot
